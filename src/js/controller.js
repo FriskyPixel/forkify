@@ -1,11 +1,11 @@
-import 'core-js/stable';
-import 'regenerator-runtime/runtime';
+import "core-js/stable";
+import "regenerator-runtime/runtime";
 
-import * as model from './model.js';
-import recipeView from './views/recipeView.js';
-import searchView from './views/searchView.js';
-import resultsView from './views/resultsView.js';
-import paginationView from './views/paginationView.js';
+import * as model from "./model.js";
+import recipeView from "./views/recipeView.js";
+import searchView from "./views/searchView.js";
+import resultsView from "./views/resultsView.js";
+import paginationView from "./views/paginationView.js";
 
 async function controlRecipes() {
   try {
@@ -15,6 +15,9 @@ async function controlRecipes() {
 
     // Load spinner
     recipeView.renderSpinner();
+
+    // Update results view to mark selected search result
+    resultsView.update(model.getSearchResultsPage());
 
     // Load receipe
     await model.loadRecipe(id);
@@ -56,8 +59,18 @@ function controlPagination(goToPage) {
   paginationView.render(model.state.search);
 }
 
+function controlServings(newServings) {
+  // Update recipe
+  model.updateServings(newServings);
+
+  // Render recipe
+  // recipeView.render(model.state.recipe);
+  recipeView.update(model.state.recipe);
+}
+
 function init() {
   recipeView.addHandlerRecipes(controlRecipes);
+  recipeView.addHandlerUpdateServings(controlServings);
   searchView.addHandlerSearch(controlSearchResults);
   paginationView.addHandlerPagination(controlPagination);
 }
