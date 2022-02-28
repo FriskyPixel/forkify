@@ -42,6 +42,7 @@ async function controlSearchResults() {
 
     // Load search results
     await model.loadSearchResults(query);
+    console.log(model.state);
 
     // Render results
     resultsView.render(model.getSearchResultsPage());
@@ -82,11 +83,16 @@ function controlAddBookmark() {
 }
 
 function init() {
+  // Handlers
   recipeView.addHandlerRecipes(controlRecipes);
   recipeView.addHandlerUpdateServings(controlServings);
   recipeView.addHandlerAddBookmark(controlAddBookmark);
   searchView.addHandlerSearch(controlSearchResults);
   paginationView.addHandlerPagination(controlPagination);
+
+  // Retrieving and displaying bookmarks in storage
+  model.restoreBookmarks();
+  bookmarksView.render(model.state.bookmarks);
 }
 
 init();
